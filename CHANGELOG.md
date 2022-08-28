@@ -2,6 +2,7 @@
 Changelog for form3-api-client
 
 ## Unreleased
+- Add endpoints internal package
 - Add missing go.sum
 - Add model builders unit tests
 - Add model builders
