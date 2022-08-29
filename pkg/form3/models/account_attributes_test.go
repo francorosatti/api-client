@@ -14,7 +14,7 @@ func Test_AccountAttributes_WithAccountClassification(t *testing.T) {
 	aa.WithAccountClassification(expectedAccountClassification)
 
 	// Assert
-	assert.Equal(t, aa.AccountClassification, expectedAccountClassification)
+	assert.Equal(t, *aa.AccountClassification, expectedAccountClassification)
 }
 
 // TODO: Add same test for all fields

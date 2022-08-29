@@ -52,7 +52,7 @@ func WithBody(body []byte) RequestOption {
 }
 
 func (e endpoint) Do(opts ...RequestOption) (*http.Response, error) {
-	options := requestOptions{}
+	options := defaultRequestOptions()
 
 	for _, opt := range opts {
 		opt(&options)
@@ -79,6 +79,13 @@ func (e endpoint) Do(opts ...RequestOption) (*http.Response, error) {
 	}
 
 	return res, nil
+}
+
+func defaultRequestOptions() requestOptions {
+	return requestOptions{
+		params: make(map[string]interface{}),
+		body:   nil,
+	}
 }
 
 func (e endpoint) buildUrl(params map[string]interface{}) (string, error) {
