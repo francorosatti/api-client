@@ -34,7 +34,7 @@ func createEndpoints(baseUrl string) map[string]endpoints.IEndpoint {
 			fmt.Sprintf("%s/accounts", baseUrl),
 			http.MethodPost,
 		),
-		_endpointGetAccount: endpoints.NewEndpoint(
+		_endpointFetchAccount: endpoints.NewEndpoint(
 			&http.Client{},
 			fmt.Sprintf("%s/accounts/{id}", baseUrl),
 			http.MethodGet,
@@ -75,33 +75,68 @@ func (client accountClient) DeleteAccount(accountID string) error {
 }
 
 func (client accountClient) createAccountRequest(accountBody []byte) ([]byte, error) {
-	return []byte{}, nil
-}
+	endpoint := client.endpoints[_endpointCreateAccount]
 
-func (client accountClient) fetchAccountRequest(id string) ([]byte, error) {
-	endpoint := client.endpoints[_endpointGetAccount]
+	requestBody := endpoints.WithBody(accountBody)
 
-	params := endpoints.WithParam(_paramID, id)
-
-	res, err := endpoint.Do(params)
+	res, err := endpoint.Do(requestBody)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %s", errDoRequest, err)
 	}
 
 	defer res.Body.Close()
 
 	if res.StatusCode > 299 {
-		return nil, fmt.Errorf("request error: code %d", res.StatusCode)
+		return nil, fmt.Errorf("%w: status code %d: %s", errResponseStatusCode, res.StatusCode, err)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %s", errResponseReadBody, err)
+	}
+
+	return body, nil
+}
+
+func (client accountClient) fetchAccountRequest(id string) ([]byte, error) {
+	endpoint := client.endpoints[_endpointFetchAccount]
+
+	params := endpoints.WithParam(_paramID, id)
+
+	res, err := endpoint.Do(params)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %s", errDoRequest, err)
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode > 299 {
+		return nil, fmt.Errorf("%w: status code %d: %s", errResponseStatusCode, res.StatusCode, err)
+	}
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %s", errResponseReadBody, err)
 	}
 
 	return body, nil
 }
 
 func (client accountClient) deleteAccountRequest(id string) error {
+	endpoint := client.endpoints[_endpointDeleteAccount]
+
+	params := endpoints.WithParam(_paramID, id)
+
+	res, err := endpoint.Do(params)
+	if err != nil {
+		return fmt.Errorf("%w: %s", errDoRequest, err)
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode > 299 {
+		return fmt.Errorf("%w: status code %d: %s", errResponseStatusCode, res.StatusCode, err)
+	}
+
 	return nil
 }
