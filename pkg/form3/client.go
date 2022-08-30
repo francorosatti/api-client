@@ -19,7 +19,7 @@ func NewClient(env Environment) (IClient, error) {
 		return nil, ErrUnknownEnvironment
 	}
 
-	baseUrl := fmt.Sprintf("%s/api/%s", host, _apiVersion)
+	baseUrl := fmt.Sprintf("%s/%s", host, _apiVersion)
 
 	return client{
 		IAccountClient: accounts.NewAccountClient(baseUrl),

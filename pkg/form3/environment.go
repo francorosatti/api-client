@@ -12,7 +12,7 @@ const (
 
 var (
 	_hostByEnvironment = map[Environment]string{
-		EnvironmentLocal:      "localhost:8080",
+		EnvironmentLocal:      "http://localhost:8080",
 		EnvironmentTest:       "https://internal.form3.com/test",
 		EnvironmentProduction: "https://internal.form3.com",
 	}
