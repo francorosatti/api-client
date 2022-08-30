@@ -2,6 +2,7 @@
 Changelog for form3-api-client
 
 ## Unreleased
+- Add integration tests basis
 - Fix models
 - Fix baseurl and localhost scheme
 - Implement accounts client create & delete services
