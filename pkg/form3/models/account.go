@@ -1,5 +1,14 @@
 package models
 
+type Account struct {
+	Data *AccountData `json:"data"`
+}
+
+func (a *Account) WithData(data AccountData) *Account {
+	a.Data = &data
+	return a
+}
+
 type AccountData struct {
 	Attributes     *AccountAttributes `json:"attributes,omitempty"`
 	ID             string             `json:"id,omitempty"`

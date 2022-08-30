@@ -10,8 +10,8 @@ import (
 )
 
 type IAccountClient interface {
-	CreateAccount(models.AccountData) (models.AccountData, error)
-	FetchAccount(accountID string) (models.AccountData, error)
+	CreateAccount(models.Account) (models.Account, error)
+	FetchAccount(accountID string) (models.Account, error)
 	DeleteAccount(accountID string) error
 }
 
@@ -31,40 +31,40 @@ func createEndpoints(baseUrl string) map[string]endpoints.IEndpoint {
 	return map[string]endpoints.IEndpoint{
 		_endpointCreateAccount: endpoints.NewEndpoint(
 			&http.Client{},
-			fmt.Sprintf("%s/accounts", baseUrl),
+			fmt.Sprintf("%s/organisation/accounts", baseUrl),
 			http.MethodPost,
 		),
 		_endpointFetchAccount: endpoints.NewEndpoint(
 			&http.Client{},
-			fmt.Sprintf("%s/accounts/{id}", baseUrl),
+			fmt.Sprintf("%s/organisation/accounts/{id}", baseUrl),
 			http.MethodGet,
 		),
 		_endpointDeleteAccount: endpoints.NewEndpoint(
 			&http.Client{},
-			fmt.Sprintf("%s/accounts/{id}", baseUrl),
+			fmt.Sprintf("%s/organisation/accounts/{id}", baseUrl),
 			http.MethodDelete,
 		),
 	}
 }
 
-func (client accountClient) CreateAccount(account models.AccountData) (models.AccountData, error) {
+func (client accountClient) CreateAccount(account models.Account) (models.Account, error) {
 	accountBytes, err := serialiseAccountData(account)
 	if err != nil {
-		return models.AccountData{}, err
+		return models.Account{}, err
 	}
 
 	response, err := client.createAccountRequest(accountBytes)
 	if err != nil {
-		return models.AccountData{}, err
+		return models.Account{}, err
 	}
 
 	return parseAccountData(response)
 }
 
-func (client accountClient) FetchAccount(accountID string) (models.AccountData, error) {
+func (client accountClient) FetchAccount(accountID string) (models.Account, error) {
 	response, err := client.fetchAccountRequest(accountID)
 	if err != nil {
-		return models.AccountData{}, err
+		return models.Account{}, err
 	}
 
 	return parseAccountData(response)
@@ -87,7 +87,7 @@ func (client accountClient) createAccountRequest(accountBody []byte) ([]byte, er
 	defer res.Body.Close()
 
 	if res.StatusCode > 299 {
-		return nil, fmt.Errorf("%w: status code %d: %s", errResponseStatusCode, res.StatusCode, err)
+		return nil, fmt.Errorf("%w: status code %d", errResponseStatusCode, res.StatusCode)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
@@ -111,7 +111,7 @@ func (client accountClient) fetchAccountRequest(id string) ([]byte, error) {
 	defer res.Body.Close()
 
 	if res.StatusCode > 299 {
-		return nil, fmt.Errorf("%w: status code %d: %s", errResponseStatusCode, res.StatusCode, err)
+		return nil, fmt.Errorf("%w: status code %d", errResponseStatusCode, res.StatusCode)
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
@@ -135,7 +135,7 @@ func (client accountClient) deleteAccountRequest(id string) error {
 	defer res.Body.Close()
 
 	if res.StatusCode > 299 {
-		return fmt.Errorf("%w: status code %d: %s", errResponseStatusCode, res.StatusCode, err)
+		return fmt.Errorf("%w: status code %d", errResponseStatusCode, res.StatusCode)
 	}
 
 	return nil
