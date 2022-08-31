@@ -12,7 +12,7 @@ import (
 type IAccountClient interface {
 	CreateAccount(models.Account) (models.Account, error)
 	FetchAccount(accountID string) (models.Account, error)
-	DeleteAccount(accountID string) error
+	DeleteAccount(accountID string, version int64) error
 }
 
 type accountClient struct {
@@ -70,8 +70,8 @@ func (client accountClient) FetchAccount(accountID string) (models.Account, erro
 	return parseAccountData(response)
 }
 
-func (client accountClient) DeleteAccount(accountID string) error {
-	return client.deleteAccountRequest(accountID)
+func (client accountClient) DeleteAccount(accountID string, version int64) error {
+	return client.deleteAccountRequest(accountID, version)
 }
 
 func (client accountClient) createAccountRequest(accountBody []byte) ([]byte, error) {
@@ -122,12 +122,13 @@ func (client accountClient) fetchAccountRequest(id string) ([]byte, error) {
 	return body, nil
 }
 
-func (client accountClient) deleteAccountRequest(id string) error {
+func (client accountClient) deleteAccountRequest(id string, version int64) error {
 	endpoint := client.endpoints[_endpointDeleteAccount]
 
 	params := endpoints.WithParam(_paramID, id)
+	query := endpoints.WithQueryParam(_queryVersion, fmt.Sprintf("%d", version))
 
-	res, err := endpoint.Do(params)
+	res, err := endpoint.Do(params, query)
 	if err != nil {
 		return fmt.Errorf("%w: %s", errDoRequest, err)
 	}

@@ -5,5 +5,6 @@ const (
 	_endpointFetchAccount  = "fetch_account"
 	_endpointDeleteAccount = "delete_account"
 
-	_paramID = "id"
+	_paramID      = "id"
+	_queryVersion = "version"
 )
