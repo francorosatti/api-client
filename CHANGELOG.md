@@ -2,6 +2,7 @@
 Changelog for form3-api-client
 
 ## Unreleased
+- Enhance readme
 - Rename parser file to json and add unit tests
 - Complete basic integration tests
 - Fix delete account service in accounts client
