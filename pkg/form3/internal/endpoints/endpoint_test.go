@@ -22,7 +22,6 @@ func Test_endpoint_Do(t *testing.T) {
 	type fields struct {
 		httpClient IHttpClient
 		urlFormat  string
-		method     string
 	}
 	tests := []struct {
 		name        string
@@ -33,7 +32,6 @@ func Test_endpoint_Do(t *testing.T) {
 	}{
 		{
 			name:        "given_invalid_parameters_then_return_error",
-			fields:      fields{},
 			opts:        []RequestOption{WithParam("id", nil)},
 			expectedOut: nil,
 			expectedErr: errBuildUrl,
@@ -70,6 +68,8 @@ func Test_endpoint_Do(t *testing.T) {
 				}(),
 			},
 			opts: []RequestOption{
+				WithQueryParam("param1", "value1"),
+				WithQueryParam("param2", "value2"),
 				WithParam("id", "id"),
 				WithBody([]byte("body")),
 			},
@@ -80,7 +80,7 @@ func Test_endpoint_Do(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Arrange
-			e := NewEndpoint(tt.fields.httpClient, tt.fields.urlFormat, tt.fields.method)
+			e := NewEndpoint(tt.fields.httpClient, tt.fields.urlFormat, "")
 
 			// Act
 			got, err := e.Do(tt.opts...)
@@ -157,6 +157,12 @@ func Test_serialiseParamValue(t *testing.T) {
 			name:        "given_string_parameter_then_serialise_ok",
 			value:       "string_param",
 			expectedOut: "string_param",
+			expectedErr: nil,
+		},
+		{
+			name:        "given_integer_parameter_then_serialise_ok",
+			value:       1,
+			expectedOut: "1",
 			expectedErr: nil,
 		},
 		{

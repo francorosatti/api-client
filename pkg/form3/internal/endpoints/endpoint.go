@@ -26,8 +26,9 @@ type (
 	}
 
 	requestOptions struct {
-		params map[string]interface{}
-		body   []byte
+		queryParams map[string]string
+		params      map[string]interface{}
+		body        []byte
 	}
 )
 
@@ -36,6 +37,12 @@ func NewEndpoint(client IHttpClient, url string, method string) IEndpoint {
 		httpClient: client,
 		urlFormat:  url,
 		method:     method,
+	}
+}
+
+func WithQueryParam(key, value string) RequestOption {
+	return func(options *requestOptions) {
+		options.queryParams[key] = value
 	}
 }
 
@@ -73,6 +80,12 @@ func (e endpoint) Do(opts ...RequestOption) (*http.Response, error) {
 		return nil, fmt.Errorf("%w: %s", errHttpNewRequest, err)
 	}
 
+	q := req.URL.Query()
+	for k, v := range options.queryParams {
+		q.Add(k, v)
+	}
+	req.URL.RawQuery = q.Encode()
+
 	res, err := e.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", errDoRequest, err)
@@ -83,8 +96,9 @@ func (e endpoint) Do(opts ...RequestOption) (*http.Response, error) {
 
 func defaultRequestOptions() requestOptions {
 	return requestOptions{
-		params: make(map[string]interface{}),
-		body:   nil,
+		queryParams: make(map[string]string),
+		params:      make(map[string]interface{}),
+		body:        nil,
 	}
 }
 
@@ -107,6 +121,8 @@ func serialiseParamValue(value interface{}) (string, error) {
 	switch value.(type) {
 	case string:
 		return value.(string), nil
+	case int:
+		return fmt.Sprintf("%d", value), nil
 	default:
 		return "", errUnsupportedParamType
 	}
