@@ -14,24 +14,8 @@ func Test_Integration_CreateAccount(t *testing.T) {
 	client, err := form3.NewClient(form3.EnvironmentLocal)
 	assert.NoError(t, err)
 
-	accountAttributes := &models.AccountAttributes{}
-	accountAttributes.WithCountry("GB").
-		WithBankID("123456").
-		WithBic("NWBKGB22").
-		WithBankIDCode("GBDSC").
-		WithBaseCurrency("GBP").
-		WithName([]string{"account name"})
+	account := getTestAccount()
 
-	accountData := models.AccountData{}
-	accountData.WithID(uuid.NewString()).
-		WithOrganisationID(uuid.NewString()).
-		WithType("accounts").
-		WithAttributes(*accountAttributes)
-
-	account := models.Account{}
-	account.WithData(accountData)
-
-	uuid.New()
 	// Act
 	createdAccount, err := client.CreateAccount(account)
 
@@ -45,12 +29,7 @@ func Test_Integration_FetchAccount(t *testing.T) {
 	client, err := form3.NewClient(form3.EnvironmentLocal)
 	assert.NoError(t, err)
 
-	accountData := models.AccountData{}
-	accountData.WithID("id").
-		WithOrganisationID("organisation_id")
-
-	account := models.Account{}
-	account.WithData(accountData)
+	account := getTestAccount()
 
 	createdAccount, err := client.CreateAccount(account)
 
@@ -67,23 +46,39 @@ func Test_Integration_DeleteAccount(t *testing.T) {
 	client, err := form3.NewClient(form3.EnvironmentLocal)
 	assert.NoError(t, err)
 
-	accountData := models.AccountData{}
-	accountData.WithID("id").
-		WithOrganisationID("organisation_id")
-
-	account := models.Account{}
-	account.WithData(accountData)
+	account := getTestAccount()
 
 	createdAccount, err := client.CreateAccount(account)
 
 	// Act
-	err = client.DeleteAccount(createdAccount.Data.ID)
+	err = client.DeleteAccount(createdAccount.Data.ID, *createdAccount.Data.Version)
 
 	// Assert
 	assert.NoError(t, err)
 
 	fetchedAccount, err := client.FetchAccount(createdAccount.Data.ID)
-	assert.Nil(t, fetchedAccount)
+	assert.Equal(t, models.Account{}, fetchedAccount)
 	assert.Error(t, err)
-	// assert.True(t, errors.Is(err, accounts.ErrAccountNotFound))
+}
+
+func getTestAccount() models.Account {
+	accountAttributes := &models.AccountAttributes{}
+	accountAttributes.WithCountry("GB").
+		WithBankID("123456").
+		WithBic("NWBKGB22").
+		WithBankIDCode("GBDSC").
+		WithBaseCurrency("GBP").
+		WithName([]string{"account name"})
+
+	accountData := models.AccountData{}
+	accountData.WithID(uuid.NewString()).
+		WithOrganisationID(uuid.NewString()).
+		WithType("accounts").
+		WithVersion(0).
+		WithAttributes(*accountAttributes)
+
+	account := models.Account{}
+	account.WithData(accountData)
+
+	return account
 }
