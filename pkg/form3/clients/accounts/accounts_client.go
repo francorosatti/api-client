@@ -48,7 +48,7 @@ func createEndpoints(baseUrl string) map[string]endpoints.IEndpoint {
 }
 
 func (client accountClient) CreateAccount(account models.Account) (models.Account, error) {
-	accountBytes, err := serialiseAccountData(account)
+	accountBytes, err := accountDataToJson(account)
 	if err != nil {
 		return models.Account{}, err
 	}
@@ -58,7 +58,7 @@ func (client accountClient) CreateAccount(account models.Account) (models.Accoun
 		return models.Account{}, err
 	}
 
-	return parseAccountData(response)
+	return jsonToAccountData(response)
 }
 
 func (client accountClient) FetchAccount(accountID string) (models.Account, error) {
@@ -67,7 +67,7 @@ func (client accountClient) FetchAccount(accountID string) (models.Account, erro
 		return models.Account{}, err
 	}
 
-	return parseAccountData(response)
+	return jsonToAccountData(response)
 }
 
 func (client accountClient) DeleteAccount(accountID string, version int64) error {
