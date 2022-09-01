@@ -55,3 +55,11 @@ type IAccountClient interface {
 ```
 
 Models can be found [here](./pkg/form3/models)
+
+## Advanced Features
+
+Some more advanced features could be added to this client:
+- http client with retries and backoff strategy
+- http client with cached responses
+- http client circuit breaker
+- client side validations
