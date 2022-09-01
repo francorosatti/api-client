@@ -2,6 +2,7 @@
 Changelog for form3-api-client
 
 ## Unreleased
+- Add timeout to account endpoints
 - Add accounts client unit tests
 - Enhance http status codes handling
 - Enhance readme

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/francorosatti/form3-api-client/pkg/form3/internal/endpoints"
 	"github.com/francorosatti/form3-api-client/pkg/form3/models"
@@ -30,17 +31,17 @@ func NewAccountClient(baseUrl string) IAccountClient {
 func createEndpoints(baseUrl string) map[string]endpoints.IEndpoint {
 	return map[string]endpoints.IEndpoint{
 		_endpointCreateAccount: endpoints.NewEndpoint(
-			&http.Client{},
+			&http.Client{Timeout: 3 * time.Second},
 			fmt.Sprintf("%s/organisation/accounts", baseUrl),
 			http.MethodPost,
 		),
 		_endpointFetchAccount: endpoints.NewEndpoint(
-			&http.Client{},
+			&http.Client{Timeout: 3 * time.Second},
 			fmt.Sprintf("%s/organisation/accounts/{id}", baseUrl),
 			http.MethodGet,
 		),
 		_endpointDeleteAccount: endpoints.NewEndpoint(
-			&http.Client{},
+			&http.Client{Timeout: 3 * time.Second},
 			fmt.Sprintf("%s/organisation/accounts/{id}", baseUrl),
 			http.MethodDelete,
 		),
