@@ -1,12 +1,13 @@
 package account_test
 
 import (
-	"github.com/google/uuid"
 	"testing"
 
 	"github.com/francorosatti/form3-api-client/pkg/form3"
 	"github.com/francorosatti/form3-api-client/pkg/form3/models"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_Integration_CreateAccount(t *testing.T) {
@@ -32,6 +33,7 @@ func Test_Integration_FetchAccount(t *testing.T) {
 	account := getTestAccount()
 
 	createdAccount, err := client.CreateAccount(account)
+	require.NoError(t, err)
 
 	// Act
 	fetchedAccount, err := client.FetchAccount(createdAccount.Data.ID)
