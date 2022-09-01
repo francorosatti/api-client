@@ -14,7 +14,9 @@ func Test_parseAccountData(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "given_valid_json_then_return_object",
+			name: "given a valid json" +
+				"when unmarshalling" +
+				"then return a valid object",
 			json: []byte(`{"data":{"id":"id","attributes":{"bank_id":"bank_id"}}}`),
 			want: models.Account{
 				Data: &models.AccountData{
@@ -27,7 +29,9 @@ func Test_parseAccountData(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "given_invalid_json_then_return_error",
+			name: "given an invalid json" +
+				"when unmarshalling" +
+				"then return error",
 			json:    []byte(`}`),
 			want:    models.Account{},
 			wantErr: true,
@@ -35,7 +39,10 @@ func Test_parseAccountData(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Act
 			got, err := jsonToAccountData(tt.json)
+
+			// Assert
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
@@ -47,6 +54,7 @@ func Test_parseAccountData(t *testing.T) {
 }
 
 func Test_serialiseAccountData(t *testing.T) {
+	// Arrange
 	model := models.Account{
 		Data: &models.AccountData{
 			ID: "id",
@@ -58,7 +66,10 @@ func Test_serialiseAccountData(t *testing.T) {
 
 	expectedJson := []byte(`{"data":{"attributes":{"bank_id":"bank_id"},"id":"id"}}`)
 
+	// Act
 	got, err := accountDataToJson(model)
+
+	// Assert
 	assert.NoError(t, err)
 	assert.Equal(t, expectedJson, got)
 }

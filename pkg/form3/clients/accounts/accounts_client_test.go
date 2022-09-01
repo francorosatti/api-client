@@ -2,15 +2,15 @@ package accounts
 
 import (
 	"errors"
-	"github.com/francorosatti/form3-api-client/pkg/form3/internal/endpoints"
-	"github.com/francorosatti/form3-api-client/pkg/form3/models"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/require"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/francorosatti/form3-api-client/pkg/form3/internal/endpoints"
+	"github.com/francorosatti/form3-api-client/pkg/form3/models"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 type endpointMock struct {
@@ -50,7 +50,9 @@ func Test_accountClient_CreateAccount(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name: "given_endpoint_status_bad_request_then_return_error",
+			name: "given any input" +
+				"when endpoint responds status bad request" +
+				"then return error",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -65,7 +67,9 @@ func Test_accountClient_CreateAccount(t *testing.T) {
 			expectedErr: ErrAccountBadRequest,
 		},
 		{
-			name: "given_endpoint_invalid_json_request_then_return_error",
+			name: "given any input" +
+				"when endpoint responds invalid json" +
+				"then return error",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -80,7 +84,9 @@ func Test_accountClient_CreateAccount(t *testing.T) {
 			expectedErr: errResponseUnmarshal,
 		},
 		{
-			name: "given_endpoint_status_ok_then_return_model",
+			name: "given any input" +
+				"when endpoint responds status ok" +
+				"then return response with model",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -105,14 +111,19 @@ func Test_accountClient_CreateAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Act
 			client := accountClient{
 				endpoints: map[string]endpoints.IEndpoint{
 					_endpointCreateAccount: tt.fields.endpoint,
 				},
 			}
+
+			// Act
 			got, err := client.CreateAccount(models.Account{})
-			require.True(t, errors.Is(err, tt.expectedErr))
-			require.Equal(t, tt.expectedOut, got)
+
+			// Assert
+			assert.True(t, errors.Is(err, tt.expectedErr))
+			assert.Equal(t, tt.expectedOut, got)
 		})
 	}
 }
@@ -128,7 +139,9 @@ func Test_accountClient_FetchAccount(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name: "given_endpoint_status_not_found_then_return_error",
+			name: "given any input" +
+				"when endpoint responds status not found" +
+				"then return error",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -143,7 +156,9 @@ func Test_accountClient_FetchAccount(t *testing.T) {
 			expectedErr: ErrAccountNotFound,
 		},
 		{
-			name: "given_endpoint_status_ok_then_return_model",
+			name: "given any input" +
+				"when endpoint responds status ok" +
+				"then return response with model",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -168,14 +183,19 @@ func Test_accountClient_FetchAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Arrange
 			client := accountClient{
 				endpoints: map[string]endpoints.IEndpoint{
 					_endpointFetchAccount: tt.fields.endpoint,
 				},
 			}
+
+			// Act
 			got, err := client.FetchAccount("any_id")
-			require.True(t, errors.Is(err, tt.expectedErr))
-			require.Equal(t, tt.expectedOut, got)
+
+			//Assert
+			assert.True(t, errors.Is(err, tt.expectedErr))
+			assert.Equal(t, tt.expectedOut, got)
 		})
 	}
 }
@@ -191,7 +211,9 @@ func Test_accountClient_requestCreateAccount(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name: "given_endpoint_fail_request_then_return_error",
+			name: "given any input" +
+				"when endpoint request fails" +
+				"then return error",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -203,7 +225,9 @@ func Test_accountClient_requestCreateAccount(t *testing.T) {
 			expectedErr: errDoRequest,
 		},
 		{
-			name: "given_endpoint_status_bad_request_then_return_error",
+			name: "given any input" +
+				"when endpoint responds status bad request" +
+				"then return error",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -218,7 +242,9 @@ func Test_accountClient_requestCreateAccount(t *testing.T) {
 			expectedErr: ErrAccountBadRequest,
 		},
 		{
-			name: "given_endpoint_status_ok_then_return_ok",
+			name: "given any input" +
+				"when endpoint responds status ok" +
+				"then return ok",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -236,14 +262,19 @@ func Test_accountClient_requestCreateAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Arrange
 			client := accountClient{
 				endpoints: map[string]endpoints.IEndpoint{
 					_endpointCreateAccount: tt.fields.endpoint,
 				},
 			}
+
+			// Act
 			got, err := client.requestCreateAccount([]byte("anything"))
-			require.True(t, errors.Is(err, tt.expectedErr))
-			require.Equal(t, tt.expectedOut, got)
+
+			// Assert
+			assert.True(t, errors.Is(err, tt.expectedErr))
+			assert.Equal(t, tt.expectedOut, got)
 		})
 	}
 }
@@ -258,7 +289,9 @@ func Test_accountClient_requestDeleteAccount(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name: "given_endpoint_fail_request_then_return_error",
+			name: "given any input" +
+				"when endpoint request fails" +
+				"then return error",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -270,7 +303,9 @@ func Test_accountClient_requestDeleteAccount(t *testing.T) {
 			expectedErr: errDoRequest,
 		},
 		{
-			name: "given_endpoint_status_conflict_then_return_error",
+			name: "given any input" +
+				"when endpoint responds status conflict" +
+				"then return error",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -285,7 +320,9 @@ func Test_accountClient_requestDeleteAccount(t *testing.T) {
 			expectedErr: ErrAccountConflict,
 		},
 		{
-			name: "given_endpoint_status_no_content_then_return_ok",
+			name: "given any input" +
+				"when endpoint responds status no content" +
+				"then return ok",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -302,13 +339,18 @@ func Test_accountClient_requestDeleteAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Act
 			client := accountClient{
 				endpoints: map[string]endpoints.IEndpoint{
 					_endpointDeleteAccount: tt.fields.endpoint,
 				},
 			}
+
+			// Act
 			err := client.requestDeleteAccount("any_id", 0)
-			require.True(t, errors.Is(err, tt.expectedErr))
+
+			// Assert
+			assert.True(t, errors.Is(err, tt.expectedErr))
 		})
 	}
 }
@@ -324,7 +366,9 @@ func Test_accountClient_requestFetchAccount(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name: "given_endpoint_fail_request_then_return_error",
+			name: "given any input" +
+				"when endpoint request fails" +
+				"then return error",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -336,7 +380,9 @@ func Test_accountClient_requestFetchAccount(t *testing.T) {
 			expectedErr: errDoRequest,
 		},
 		{
-			name: "given_endpoint_status_not_found_then_return_error",
+			name: "given any input" +
+				"when endpoint responds status not found" +
+				"then return error",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -351,7 +397,9 @@ func Test_accountClient_requestFetchAccount(t *testing.T) {
 			expectedErr: ErrAccountNotFound,
 		},
 		{
-			name: "given_endpoint_status_ok_then_return_ok",
+			name: "given any input" +
+				"when endpoint responds status ok" +
+				"then return ok",
 			fields: fields{
 				endpoint: func() endpoints.IEndpoint {
 					endpoint := &endpointMock{}
@@ -369,14 +417,19 @@ func Test_accountClient_requestFetchAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Arrange
 			client := accountClient{
 				endpoints: map[string]endpoints.IEndpoint{
 					_endpointFetchAccount: tt.fields.endpoint,
 				},
 			}
+
+			// Act
 			got, err := client.requestFetchAccount("any_id")
-			require.True(t, errors.Is(err, tt.expectedErr))
-			require.Equal(t, tt.expectedOut, got)
+
+			// Assert
+			assert.True(t, errors.Is(err, tt.expectedErr))
+			assert.Equal(t, tt.expectedOut, got)
 		})
 	}
 }

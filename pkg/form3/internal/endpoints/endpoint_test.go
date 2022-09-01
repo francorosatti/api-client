@@ -31,13 +31,17 @@ func Test_endpoint_Do(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name:        "given_invalid_parameters_then_return_error",
+			name: "given invalid parameters" +
+				"when doing request" +
+				"then return error",
 			opts:        []RequestOption{WithParam("id", nil)},
 			expectedOut: nil,
 			expectedErr: errBuildUrl,
 		},
 		{
-			name: "given_invalid_url_then_return_error",
+			name: "given an invalid url" +
+				"when doing request" +
+				"then return error",
 			fields: fields{
 				urlFormat: "%%",
 			},
@@ -46,7 +50,9 @@ func Test_endpoint_Do(t *testing.T) {
 			expectedErr: errHttpNewRequest,
 		},
 		{
-			name: "given_invalid_client_then_return_error",
+			name: "given an invalid client" +
+				"when doing request" +
+				"then return error",
 			fields: fields{
 				httpClient: func() IHttpClient {
 					client := &mockHttpClient{}
@@ -59,7 +65,9 @@ func Test_endpoint_Do(t *testing.T) {
 			expectedErr: errDoRequest,
 		},
 		{
-			name: "given_valid_client_then_return_error",
+			name: "given a valid client" +
+				"when doing request" +
+				"then return ok",
 			fields: fields{
 				httpClient: func() IHttpClient {
 					client := &mockHttpClient{}
@@ -101,28 +109,36 @@ func Test_endpoint_buildUrl(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name:        "given_url_without_parameters_then_return_same_url",
+			name: "given a url without parameters" +
+				"when building url" +
+				"then return same url",
 			urlFormat:   "https://host:port/path",
 			params:      nil,
 			expectedOut: "https://host:port/path",
 			expectedErr: nil,
 		},
 		{
-			name:        "given_url_with_parameters_then_return_same_url_with_params",
+			name: "given a url with parameters" +
+				"when building url" +
+				"then return same url with replaced parameter values",
 			urlFormat:   "https://host:port/path/{param}",
 			params:      map[string]interface{}{"param": "value"},
 			expectedOut: "https://host:port/path/value",
 			expectedErr: nil,
 		},
 		{
-			name:        "given_url_with_missing_parameters_then_return_same_url",
+			name: "given a url with parameters and non-matching parameters" +
+				"when building url" +
+				"then return same url without replaced parameter values",
 			urlFormat:   "https://host:port/path/{param}",
 			params:      map[string]interface{}{"missing_param": "value"},
 			expectedOut: "https://host:port/path/{param}",
 			expectedErr: nil,
 		},
 		{
-			name:        "given_url_with_invalid_parameters_then_return_error",
+			name: "given a url and invalid parameter values" +
+				"when building url" +
+				"then return error",
 			urlFormat:   "https://host:port/path",
 			params:      map[string]interface{}{"param": nil},
 			expectedOut: "",
@@ -154,19 +170,25 @@ func Test_serialiseParamValue(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name:        "given_string_parameter_then_serialise_ok",
+			name: "given a string parameter" +
+				"when serialising parameter" +
+				"then serialise ok",
 			value:       "string_param",
 			expectedOut: "string_param",
 			expectedErr: nil,
 		},
 		{
-			name:        "given_integer_parameter_then_serialise_ok",
+			name: "given an integer parameter" +
+				"when serialising parameter" +
+				"then serialise ok",
 			value:       1,
 			expectedOut: "1",
 			expectedErr: nil,
 		},
 		{
-			name:        "given_unsupported_parameter_type_then_serialise_ok",
+			name: "given an unsupported parameter type" +
+				"when serialising parameter" +
+				"then return error",
 			value:       nil,
 			expectedOut: "",
 			expectedErr: errUnsupportedParamType,

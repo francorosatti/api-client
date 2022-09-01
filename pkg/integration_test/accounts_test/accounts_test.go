@@ -13,7 +13,7 @@ import (
 func Test_Integration_CreateAccount(t *testing.T) {
 	// Arrange
 	client, err := form3.NewClient(form3.EnvironmentLocal)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	account := getTestAccount()
 
@@ -28,7 +28,7 @@ func Test_Integration_CreateAccount(t *testing.T) {
 func Test_Integration_FetchAccount(t *testing.T) {
 	// Arrange
 	client, err := form3.NewClient(form3.EnvironmentLocal)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	account := getTestAccount()
 
@@ -46,11 +46,12 @@ func Test_Integration_FetchAccount(t *testing.T) {
 func Test_Integration_DeleteAccount(t *testing.T) {
 	// Arrange
 	client, err := form3.NewClient(form3.EnvironmentLocal)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	account := getTestAccount()
 
 	createdAccount, err := client.CreateAccount(account)
+	require.NoError(t, err)
 
 	// Act
 	err = client.DeleteAccount(createdAccount.Data.ID, *createdAccount.Data.Version)
