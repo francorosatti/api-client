@@ -2,6 +2,8 @@
 Changelog for form3-api-client
 
 ## Unreleased
+
+## [v1.0.1] - 2022-09-02
 - Fix integration test create account
 
 ## [v1.0.0] - 2022-09-01
