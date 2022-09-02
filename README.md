@@ -1,6 +1,10 @@
 # form3-api-client
 Client for Form3 fake API
 
+## Author
+Franco Rosatti (francorosatti@gmail.com)  
+I've been working with Go since September 2020.
+
 ## Changelog
 Any changes to this project can be found [here](./CHANGELOG.md)
 

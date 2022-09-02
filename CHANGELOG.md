@@ -2,6 +2,8 @@
 Changelog for form3-api-client
 
 ## Unreleased
+
+## [v1.0.0] - 2022-09-01
 - Add more integration test scenarios
 - Add empty ID validation
 - Refactor unit test names
