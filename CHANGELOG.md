@@ -2,6 +2,7 @@
 Changelog for form3-api-client
 
 ## Unreleased
+- Add more integration test scenarios
 - Add empty ID validation
 - Refactor unit test names
 - Add timeout to account endpoints
