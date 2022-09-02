@@ -13,6 +13,9 @@ import (
 )
 
 func Test_Integration_CreateAccount(t *testing.T) {
+	fullAccountID := uuid.NewString()
+	minimumAccountID := uuid.NewString()
+
 	type args struct {
 		model *models.Account
 	}
@@ -29,7 +32,7 @@ func Test_Integration_CreateAccount(t *testing.T) {
 			args: args{
 				model: new(models.Account).WithData(
 					*new(models.AccountData).
-						WithID("9ab01f5b-c1e3-4596-8f3b-4e98b8f57785").
+						WithID(fullAccountID).
 						WithOrganisationID("200231e0-f512-4d95-93db-934820c0a156").
 						WithType("accounts").
 						WithVersion(0).
@@ -55,7 +58,7 @@ func Test_Integration_CreateAccount(t *testing.T) {
 			},
 			expectedOut: *new(models.Account).WithData(
 				*new(models.AccountData).
-					WithID("9ab01f5b-c1e3-4596-8f3b-4e98b8f57785").
+					WithID(fullAccountID).
 					WithOrganisationID("200231e0-f512-4d95-93db-934820c0a156").
 					WithType("accounts").
 					WithVersion(0).
@@ -87,7 +90,7 @@ func Test_Integration_CreateAccount(t *testing.T) {
 			args: args{
 				model: new(models.Account).WithData(
 					*new(models.AccountData).
-						WithID("e414146c-5e9f-4c68-942c-6573d7d14d90").
+						WithID(minimumAccountID).
 						WithOrganisationID("a3b33ec8-9ee4-42ec-b436-561f0264fc57").
 						WithType("accounts").
 						WithAttributes(
@@ -99,7 +102,7 @@ func Test_Integration_CreateAccount(t *testing.T) {
 			},
 			expectedOut: *new(models.Account).WithData(
 				*new(models.AccountData).
-					WithID("e414146c-5e9f-4c68-942c-6573d7d14d90").
+					WithID(minimumAccountID).
 					WithOrganisationID("a3b33ec8-9ee4-42ec-b436-561f0264fc57").
 					WithType("accounts").
 					WithVersion(0).
