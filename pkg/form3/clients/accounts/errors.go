@@ -3,9 +3,10 @@ package accounts
 import "errors"
 
 var (
-	ErrAccountBadRequest = errors.New("account bad request")
-	ErrAccountNotFound   = errors.New("account not found")
-	ErrAccountConflict   = errors.New("account conflict with version")
+	ErrAccountBadRequest        = errors.New("account bad request")
+	ErrAccountNotFound          = errors.New("account not found")
+	ErrAccountConflict          = errors.New("account conflict with version")
+	ErrAccountInvalidParameters = errors.New("invalid input parameters")
 
 	errDoRequest          = errors.New("error doing request")
 	errResponseReadBody   = errors.New("error reading response body")

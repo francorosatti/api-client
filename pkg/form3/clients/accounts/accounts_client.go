@@ -63,6 +63,10 @@ func (client accountClient) CreateAccount(account models.Account) (models.Accoun
 }
 
 func (client accountClient) FetchAccount(accountID string) (models.Account, error) {
+	if accountID == "" {
+		return models.Account{}, ErrAccountInvalidParameters
+	}
+
 	response, err := client.requestFetchAccount(accountID)
 	if err != nil {
 		return models.Account{}, err
@@ -72,6 +76,10 @@ func (client accountClient) FetchAccount(accountID string) (models.Account, erro
 }
 
 func (client accountClient) DeleteAccount(accountID string, version int64) error {
+	if accountID == "" {
+		return ErrAccountInvalidParameters
+	}
+
 	return client.requestDeleteAccount(accountID, version)
 }
 
